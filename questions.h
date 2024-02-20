@@ -1,19 +1,8 @@
-/*
- * Tutorial 4 Jeopardy Project for SOFE 3950U / CSCI 3020U: Operating Systems
- *
- * Copyright (C) 2015, <GROUP MEMBERS>
- * All rights reserved.
- *
- */
 #ifndef QUESTIONS_H_
 #define QUESTIONS_H_
-
 #include <stdbool.h>
-
 #define MAX_LEN 256
 #define NUM_CATEGORIES 3
-// The number of questions, you can use this in your functions in
-// questions.c, this can be accessed in questions.c
 #define NUM_QUESTIONS 12
 
 // List of 3 categories as array of strings

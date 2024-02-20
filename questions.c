@@ -1,27 +1,22 @@
-/*
- * Tutorial 4 Jeopardy Project for SOFE 3950U / CSCI 3020U: Operating Systems
- *
- * Copyright (C) 2015, <GROUP MEMBERS>
- * All rights reserved.
- *
- */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "questions.h"
-
+int strcasecmp(const char *s1, const char *s2);
 
 question questions[NUM_QUESTIONS] = {
-    {"programming", "Question 1", "Answer 1", 100, false},
-    {"programming", "Question 2", "Answer 2", 200, false},
-    {"programming", "Question 3", "Answer 3", 300, false},
-    {"algorithms", "Question 1", "Answer 1", 100, false},
-    {"algorithms", "Question 2", "Answer 2", 200, false},
-    {"algorithms", "Question 3", "Answer 3", 300, false},
-    {"databases", "Question 1", "Answer 1", 100, false},
-    {"databases", "Question 2", "Answer 2", 200, false},
-    {"databases", "Question 3", "Answer 3", 300, false},
-    // Add more questions as needed
+    {"programming", "Question 1", "A1", 100, false},
+    {"programming", "Question 2", "A2", 200, false},
+    {"programming", "Question 3", "A3", 300, false},
+    {"programming", "Question 4", "A4", 400, false},
+    {"algorithms", "Question 1", "A1", 100, false},
+    {"algorithms", "Question 2", "A2", 200, false},
+    {"algorithms", "Question 3", "A3", 300, false},
+    {"algorithms", "Question 4", "A4", 400, false},
+    {"databases", "Question 1", "A1", 100, false},
+    {"databases", "Question 2", "A2", 200, false},
+    {"databases", "Question 3", "A3", 300, false},
+    {"databases", "Question 4", "A4", 400, false}
 };
 
 // Initializes the array of questions for the game
@@ -36,7 +31,6 @@ void initialize_game(void)
 // Displays each of the remaining categories and question dollar values that have not been answered
 void display_categories(void)
 {
-    // print categories and dollar values for each unanswered question in questions array
     for (int i = 0; i < NUM_CATEGORIES; i++) {
         printf("%s\n", categories[i]);
         for (int j = 0; j < NUM_QUESTIONS / NUM_CATEGORIES; j++) {
@@ -50,8 +44,11 @@ void display_categories(void)
 // Displays the question for the category and dollar value
 void display_question(char *category, int value)
 {
-    for (int i = 0; i < NUM_QUESTIONS; i++) {
-        if (strcmp(questions[i].category, category) == 0 && questions[i].value == value) {
+    printf("Category: %s, Value: %d\n", category, value);
+    for (int i = 0; i < NUM_QUESTIONS; i++)
+    {
+        if (strcmp(questions[i].category, category) == 0 && questions[i].value == value)
+        {
             printf("%s\n", questions[i].question);
             return;
         }
@@ -62,12 +59,16 @@ void display_question(char *category, int value)
 // Returns true if the answer is correct for the question for that category and dollar value
 bool valid_answer(char *category, int value, char *answer)
 {
-    // Look into string comparison functions
-    for (int i = 0; i < NUM_QUESTIONS; i++) {
-        if (strcmp(questions[i].category, category) == 0 && questions[i].value == value) {
-            if (strcmp(questions[i].answer, answer) == 0) {
-                return true;
-            }
+    for (int i = 0; i < NUM_QUESTIONS; i++)
+    {
+        //printf(questions[i].answer);
+        if (strcmp(questions[i].category, category) == 0 &&
+            questions[i].value == value &&
+            strcasecmp(questions[i].answer, answer) == 0 &&
+            !questions[i].answered)
+        {
+            questions[i].answered = true;
+            return true;
         }
     }
     return false;

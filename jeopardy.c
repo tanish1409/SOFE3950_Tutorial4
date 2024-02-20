@@ -1,10 +1,3 @@
-/*
- * Tutorial 4 Jeopardy Project for SOFE 3950U / CSCI 3020U: Operating Systems
- *
- * Copyright (C) 2015, <GROUP MEMBERS>
- * All rights reserved.
- *
- */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,41 +46,6 @@ void show_results(player *players, int num_players)
     }
 }
 
-// int main(int argc, char *argv[])
-// {
-//     // An array of 4 players, may need to be a pointer if you want it set dynamically
-//     player players[NUM_PLAYERS];
-    
-//     // Input buffer and and commands
-//     char buffer[BUFFER_LEN] = { 0 };
-//     char *tokens[BUFFER_LEN / 2];   
-
-//     printf("Welcome to Jeopardy!\n");
-//     // Display the game introduction and initialize the questions
-//     initialize_game();
-
-//     // Prompt for players names
-//     for (int i = 0; i < NUM_PLAYERS; i++) {
-//         printf("Enter name for player %d: ", i + 1);
-//         fgets(buffer, BUFFER_LEN, stdin);
-//         sscanf(buffer, "%s", players[i].name);
-//         players[i].score = 0;
-//     }
-    
-//     // initialize each of the players in the array
-
-//     // Perform an infinite loop getting command input from users until game ends
-//     while (fgets(buffer, BUFFER_LEN, stdin) != NULL)
-//     {
-//         // Call functions from the questions and players source files
-
-//         // Execute the game until all questions are answered
-
-//         // Display the final results and exit
-//     }
-//     return EXIT_SUCCESS;
-// }
-
 int main(int argc, char *argv[])
 {
     // An array of 4 players
@@ -119,28 +77,62 @@ int main(int argc, char *argv[])
         // Get the player's selection
         printf("Enter the name of the category and the dollar value of the question (e.g. 'programming 100'): ");
         fgets(buffer, BUFFER_LEN, stdin);
-        sscanf(buffer, "%s", buffer);
-        char category[MAX_LEN];
-        int value;
-        sscanf(buffer, "%s %d", category, &value);
+
+        // Tokenize the input to extract category and value
+        char *category = strtok(buffer, " ");
+        char *value_str = strtok(NULL, " ");
+
+        // Check if category and value are valid
+        if (category == NULL || value_str == NULL) {
+            printf("Invalid input format. Please enter the category and value.\n");
+            continue; // Restart the loop
+        }
+
+        int value = atoi(value_str); // Convert string to integer
+
+        // Validate the category and value
+        bool valid_category = false;
+        bool valid_value = false;
+        for (int i = 0; i < NUM_CATEGORIES; i++) {
+            if (strcmp(categories[i], category) == 0) {
+                valid_category = true;
+                break;
+            }
+        }
+        if (!valid_category) {
+            printf("Invalid category. Please choose from the available categories.\n");
+            continue; // Restart the loop
+        }
+
+        // Check if value is within the valid range
+        if (value % 100 != 0 || value < 100 || value > 300) {
+            printf("Invalid value. Please choose a value of 100, 200, 300 or 400.\n");
+            continue; // Restart the loop
+        }
 
         // Display the question
         display_question(category, value);
 
+
         // Get the player's answer
         printf("Enter your answer: ");
         fgets(buffer, BUFFER_LEN, stdin);
-        strtok(buffer, "\n"); // Remove newline character
+        strtok(buffer, "\n");
+
+        // Clean the user's answer (remove leading/trailing whitespace)
+        char *clean_answer = buffer;
+        while (*clean_answer == ' ')
+            clean_answer++;
 
         // Process the answer
         if (valid_answer(category, value, buffer))
         {
             printf("Correct!\n");
-            update_score(players, NUM_PLAYERS, players[0].name, value); // Update the score for the first player for now
+            update_score(players, NUM_PLAYERS, players[0].name, value);
         }
         else
         {
-            printf("Incorrect!\n");
+            printf("Correct!\n");
         }
 
         // Check if all questions have been answered
